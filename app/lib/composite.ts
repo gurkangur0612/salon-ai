@@ -21,10 +21,28 @@ function regionPreservation(
   height: number,
   region: { left: number; top: number; right: number; bottom: number },
 ) {
-  const left = Math.max(0, Math.floor(region.left * width));
-  const right = Math.min(width, Math.ceil(region.right * width));
-  const top = Math.max(0, Math.floor(region.top * height));
-  const bottom = Math.min(height, Math.ceil(region.bottom * height));
+  const isNormalized =
+  region.left >= 0 &&
+  region.top >= 0 &&
+  region.right <= 1 &&
+  region.bottom <= 1;
+
+const left = Math.max(
+  0,
+  Math.floor(isNormalized ? region.left * width : region.left),
+);
+const right = Math.min(
+  width,
+  Math.ceil(isNormalized ? region.right * width : region.right),
+);
+const top = Math.max(
+  0,
+  Math.floor(isNormalized ? region.top * height : region.top),
+);
+const bottom = Math.min(
+  height,
+  Math.ceil(isNormalized ? region.bottom * height : region.bottom),
+);
   let total = 0; let equal = 0;
   for (let y = top; y < bottom; y += 1) for (let x = left; x < right; x += 1) {
     const index = (y * width + x) * 4; total += 1;

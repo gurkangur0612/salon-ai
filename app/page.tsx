@@ -18,6 +18,11 @@ export default function Home() {
   const inputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
+  const [angleFile, setAngleFile] = useState<File | null>(null);
+const [anglePreview, setAnglePreview] = useState<string | null>(null);
+
+const [profileFile, setProfileFile] = useState<File | null>(null);
+const [profilePreview, setProfilePreview] = useState<string | null>(null);
   const [analysis, setAnalysis] = useState<BarberAnalysis | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [mode, setMode] = useState<EditMode>("hair");

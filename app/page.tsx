@@ -244,6 +244,11 @@ setRightPreview(next ? URL.createObjectURL(next) : null);
   <span className="mt-1 block text-xs text-[#687873]">
     Tepe bölgesi, saç ayrımı ve saç yoğunluğunu değerlendirmek için kullanılır.
   </span>
+  <ul className="mt-3 space-y-1 text-xs text-[#687873]">
+  <li>• Telefon başın tam üstünde olsun.</li>
+  <li>• Tepe bölgesi ve saç ayrımı net görünsün.</li>
+  <li>• Telefon eğik değil, yere paralel dursun.</li>
+</ul>
 
   <input
     className="mt-3 block w-full text-sm"

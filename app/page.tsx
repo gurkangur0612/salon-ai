@@ -18,11 +18,17 @@ export default function Home() {
   const inputRef = useRef<HTMLInputElement>(null);
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
-  const [angleFile, setAngleFile] = useState<File | null>(null);
-const [anglePreview, setAnglePreview] = useState<string | null>(null);
+ const [rightFile, setRightFile] = useState<File | null>(null);
+const [rightPreview, setRightPreview] = useState<string | null>(null);
 
-const [profileFile, setProfileFile] = useState<File | null>(null);
-const [profilePreview, setProfilePreview] = useState<string | null>(null);
+const [leftFile, setLeftFile] = useState<File | null>(null);
+const [leftPreview, setLeftPreview] = useState<string | null>(null);
+
+const [backFile, setBackFile] = useState<File | null>(null);
+const [backPreview, setBackPreview] = useState<string | null>(null);
+
+const [topFile, setTopFile] = useState<File | null>(null);
+const [topPreview, setTopPreview] = useState<string | null>(null);
   const [analysis, setAnalysis] = useState<BarberAnalysis | null>(null);
   const [selectedId, setSelectedId] = useState<string | null>(null);
   const [mode, setMode] = useState<EditMode>("hair");
@@ -133,7 +139,7 @@ const [profilePreview, setProfilePreview] = useState<string | null>(null);
           <button onClick={() => inputRef.current?.click()} className="mt-4 rounded-full bg-[#173c35] px-6 py-3 font-bold text-white hover:bg-[#24584e]">{file ? "Fotoğrafı değiştir" : "Fotoğraf seç"}</button><input ref={inputRef} className="hidden" type="file" accept="image/jpeg,image/png,image/webp" onChange={onFileChange} />
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
   <label className="rounded-2xl border border-dashed border-[#2d6a5e]/30 bg-[#eef3f0] p-4 text-left">
-    <span className="block text-sm font-bold text-[#173c35]">45 derece fotoğraf</span>
+    <span className="block text-sm font-bold text-[#173c35]">Sağ profil fotoğrafı</span>
     <span className="mt-1 block text-xs text-[#687873]">
       Kafa yapısını ve şakak geçişlerini daha iyi anlamamız için isteğe bağlıdır.
     </span>
@@ -143,14 +149,14 @@ const [profilePreview, setProfilePreview] = useState<string | null>(null);
       accept="image/jpeg,image/png,image/webp"
       onChange={(event) => {
         const next = event.target.files?.[0] ?? null;
-        if (anglePreview) URL.revokeObjectURL(anglePreview);
-        setAngleFile(next);
-        setAnglePreview(next ? URL.createObjectURL(next) : null);
+        if (rightPreview) URL.revokeObjectURL(rightPreview);
+       setRightFile(next);
+setRightPreview(next ? URL.createObjectURL(next) : null);
       }}
     />
-    {anglePreview && (
+    {rightPreview && (
       <img
-        src={anglePreview}
+        src={rightPreview}
         alt="45 derece önizleme"
         className="mt-3 h-40 w-full rounded-xl object-cover"
       />
@@ -158,7 +164,7 @@ const [profilePreview, setProfilePreview] = useState<string | null>(null);
   </label>
 
   <label className="rounded-2xl border border-dashed border-[#2d6a5e]/30 bg-[#eef3f0] p-4 text-left">
-    <span className="block text-sm font-bold text-[#173c35]">Profil fotoğrafı</span>
+    <span className="block text-sm font-bold text-[#173c35]">Sol profil fotoğrafı</span>
     <span className="mt-1 block text-xs text-[#687873]">
       Kafanın yan derinliğini ve saç çizgisini değerlendirmek için isteğe bağlıdır.
     </span>
@@ -168,15 +174,15 @@ const [profilePreview, setProfilePreview] = useState<string | null>(null);
       accept="image/jpeg,image/png,image/webp"
       onChange={(event) => {
         const next = event.target.files?.[0] ?? null;
-        if (profilePreview) URL.revokeObjectURL(profilePreview);
-        setProfileFile(next);
-        setProfilePreview(next ? URL.createObjectURL(next) : null);
+        if (leftPreview) URL.revokeObjectURL(leftPreview);
+        setLeftFile(next);
+        setLeftPreview(next ? URL.createObjectURL(next) : null);
       }}
     />
-    {profilePreview && (
+    {leftPreview && (
       <img
-        src={profilePreview}
-        alt="Profil önizleme"
+        src={leftPreview}
+        alt="Sol profil önizleme"
         className="mt-3 h-40 w-full rounded-xl object-cover"
       />
     )}

@@ -112,7 +112,18 @@ const angleImages = [
     if (!response.ok) { console.error("OpenAI analysis error", response.status, data?.error?.code); return fail("Fotoğraf analizi şu anda tamamlanamadı. Lütfen tekrar deneyin.", response.status); }
     const output = data?.output?.flatMap((item: { content?: { type?: string; text?: string }[] }) => item.content ?? []).find((item: { type?: string }) => item.type === "output_text")?.text;
     if (!output) return fail("Analiz servisi boş bir sonuç döndürdü.", 502);
-    return NextResponse.json({ success: true, analysis: JSON.parse(output) });
+  const analysis = JSON.parse(output);
+
+analysisCache.set(cacheKey, {
+  analysis,
+  expiresAt: Date.now() + CACHE_DURATION_MS,
+});
+
+return NextResponse.json({
+  success: true,
+  analysis,
+  cached: false,
+});
   } catch (error) {
     console.error("Sanal Salon analyze error", error);
     return fail("Beklenmeyen bir analiz hatası oluştu.", 500);

@@ -65,7 +65,13 @@ const [topPreview, setTopPreview] = useState<string | null>(null);
     if (!file || busy) return;
     setBusy("analyze"); setError(""); setAnalysis(null);
     try {
-      const body = new FormData(); body.append("image", file);
+     const body = new FormData();
+body.append("image", file);
+
+if (rightFile) body.append("rightImage", rightFile);
+if (leftFile) body.append("leftImage", leftFile);
+if (backFile) body.append("backImage", backFile);
+if (topFile) body.append("topImage", topFile);
       const response = await fetch("/api/analyze", { method: "POST", body });
       const data = await response.json();
       if (!response.ok || !data.success) throw new Error(data.error || "Fotoğraf analiz edilemedi.");

@@ -6,6 +6,19 @@ export const runtime = "nodejs";
 export const maxDuration = 60;
 
 function fail(error: string, status: number) { return NextResponse.json({ success: false, error }, { status }); }
+async function fileToDataUrl(value: FormDataEntryValue | null) {
+  if (!(value instanceof File)) return null;
+
+  if (
+    !IMAGE_RULES.acceptedTypes.includes(value.type as never) ||
+    value.size > IMAGE_RULES.maxBytes
+  ) {
+    throw new Error("Fotoğraflardan biri geçersiz formatta veya çok büyük.");
+  }
+
+  const base64 = Buffer.from(await value.arrayBuffer()).toString("base64");
+  return `data:${value.type};base64,${base64}`;
+}
 
 export async function POST(request: Request) {
   try {

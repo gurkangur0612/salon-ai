@@ -38,6 +38,20 @@ const rightImage = formData.get("rightImage");
 const leftImage = formData.get("leftImage");
 const backImage = formData.get("backImage");
 const topImage = formData.get("topImage");
+
+const cacheKey = [
+  image,
+  rightImage,
+  leftImage,
+  backImage,
+  topImage,
+]
+  .map((value) =>
+    value instanceof File
+      ? `${value.name}:${value.size}:${value.lastModified}`
+      : "none"
+  )
+  .join("|");
     if (!(image instanceof File)) return fail("Fotoğraf gönderilmedi.", 400);
     if (!IMAGE_RULES.acceptedTypes.includes(image.type as never) || image.size > IMAGE_RULES.maxBytes) return fail("Fotoğraf JPG, PNG veya WEBP ve 10 MB'dan küçük olmalıdır.", 400);
 

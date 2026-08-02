@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 /* eslint-disable @next/next/no-img-element */
 import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
@@ -19,7 +19,82 @@ export default function Home() {
   const videoRef = useRef<HTMLVideoElement>(null);
 const streamRef = useRef<MediaStream | null>(null);
 const [cameraOpen, setCameraOpen] = useState(false);
-  const [file, setFile] = useState<File | null>(null);
+async function openFrontCamera() {
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({
+      video: {
+        facingMode: "user",
+        width: { ideal: 1280 },
+        height: { ideal: 720 },
+      },
+      audio: false,
+    });
+
+    streamRef.current = stream;
+    setCameraOpen(true);
+
+    requestAnimationFrame(() => {
+      if (videoRef.current) {
+        videoRef.current.srcObject = stream;
+        void videoRef.current.play();
+      }
+    });
+  } catch (error) {
+    console.error("Kamera açılamadı:", error);
+    setError("Kamera izni verilmedi veya kamera açılamadı.");
+  }
+}
+
+function closeCamera() {
+  streamRef.current?.getTracks().forEach((track) => track.stop());
+  streamRef.current = null;
+
+  if (videoRef.current) {
+    videoRef.current.srcObject = null;
+  }
+
+  setCameraOpen(false);
+}
+  async function captureFrontPhoto() {
+  const video = videoRef.current;
+  if (!video || video.videoWidth === 0 || video.videoHeight === 0) {
+    setError("Kamera görüntüsü henüz hazır değil.");
+    return;
+  }
+
+  const canvas = document.createElement("canvas");
+  canvas.width = video.videoWidth;
+  canvas.height = video.videoHeight;
+
+  const context = canvas.getContext("2d");
+  if (!context) {
+    setError("Fotoğraf oluşturulamadı.");
+    return;
+  }
+
+  context.translate(canvas.width, 0);
+  context.scale(-1, 1);
+  context.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+  const blob = await new Promise<Blob | null>((resolve) => {
+    canvas.toBlob(resolve, "image/jpeg", 0.95);
+  });
+
+  if (!blob) {
+    setError("Fotoğraf oluşturulamadı.");
+    return;
+  }
+
+  const capturedFile = new File(
+    [blob],
+    `front-${Date.now()}.jpg`,
+    { type: "image/jpeg", lastModified: Date.now() }
+  );
+
+  selectFile(capturedFile);
+  closeCamera();
+}
+const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
  const [rightFile, setRightFile] = useState<File | null>(null);
 const [rightPreview, setRightPreview] = useState<string | null>(null);
@@ -187,9 +262,47 @@ if (topFile) body.append("topImage", topFile);
       <div className="rounded-[2rem] border border-black/10 bg-white p-5 shadow-[0_28px_80px_rgba(31,48,43,.14)] sm:p-7">
         <div onDragOver={(e) => e.preventDefault()} onDrop={(e) => { e.preventDefault(); const dropped = e.dataTransfer.files[0]; if (dropped) selectFile(dropped); }} className="rounded-3xl border-2 border-dashed border-[#2d6a5e]/25 bg-[#eef3f0] p-5 text-center">
           {preview ? <img src={preview} alt="Yüklenen portre" className="mx-auto max-h-[520px] w-full rounded-2xl object-contain" /> : <div className="py-16"><div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-white text-2xl shadow-sm">↥</div><h2 className="mt-5 text-2xl font-black">Portre fotoğrafını yükle</h2><p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-[#687873]">Önden çekilmiş, iyi aydınlatılmış ve tek kişi içeren JPG, PNG veya WEBP.</p></div>}
-          <button onClick={() => inputRef.current?.click()} className="mt-4 rounded-full bg-[#173c35] px-6 py-3 font-bold text-white hover:bg-[#24584e]">{file ? "Fotoğrafı değiştir" : "Fotoğraf seç"}</button><input ref={inputRef} className="hidden" type="file" accept="image/jpeg,image/png,image/webp"
+          <button onClick={openFrontCamera} className="mt-4 rounded-full bg-[#173c35] px-6 py-3 font-bold text-white hover:bg-[#24584e]">{file ? "Fotoğrafı değiştir" : "Fotoğraf seç"}</button><input ref={inputRef} className="hidden" type="file" accept="image/jpeg,image/png,image/webp"
       capture="user" onChange={onFileChange} /><ul className="mt-3 space-y-1 text-left text-xs text-[#687873]"><li>• Telefon göz hizasında olsun.</li><li>• Yüz ve saç çizgisi tamamen görünsün.</li><li>• Işık önden gelsin, filtre kullanılmasın.</li></ul>
-          <div className="mt-6 grid gap-4 sm:grid-cols-2">
+          {cameraOpen && (
+  <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 p-4">
+    <div className="w-full max-w-md rounded-3xl bg-[#f4f1ea] p-4 shadow-2xl">
+      <div className="mb-3 flex items-center justify-between">
+        <h2 className="text-lg font-black text-[#173c35]">Ön fotoğrafı çek</h2>
+        <button
+          type="button"
+          onClick={closeCamera}
+          className="rounded-full bg-white px-4 py-2 text-sm font-bold text-[#173c35]"
+        >
+          Kapat
+        </button>
+      </div>
+
+      <div className="overflow-hidden rounded-2xl bg-black">
+        <video
+          ref={videoRef}
+          autoPlay
+          playsInline
+          muted
+          className="aspect-[3/4] w-full object-cover -scale-x-100"
+        />
+      </div>
+
+      <p className="mt-3 text-center text-xs text-[#687873]">
+        Telefonu göz hizasında tut. Yüz ve saç çizgisi tamamen görünsün.
+      </p>
+
+      <button
+        type="button"
+        onClick={captureFrontPhoto}
+        className="mt-4 w-full rounded-full bg-[#173c35] px-6 py-3 font-bold text-white"
+      >
+        Fotoğrafı çek
+      </button>
+    </div>
+  </div>
+)}
+<div className="mt-6 grid gap-4 sm:grid-cols-2">
   <label className="rounded-2xl border border-dashed border-[#2d6a5e]/30 bg-[#eef3f0] p-4 text-left">
     <span className="block text-sm font-bold text-[#173c35]">Sağ profil fotoğrafı</span>
     <span className="mt-1 block text-xs text-[#687873]">
@@ -352,4 +465,5 @@ function DebugImage({ label, src }: { label: string; src: string }) {
 function Metric({ label, value }: { label: string; value: number }) {
   return <div className="rounded-xl bg-white p-3"><p className="text-xs font-bold text-slate-500">{label}</p><p className="mt-1 text-lg font-black">%{(value * 100).toFixed(3)}</p></div>;
 }
+
 

@@ -11,7 +11,13 @@ export async function POST(request: Request) {
   try {
     const apiKey = process.env.OPENAI_API_KEY;
     if (!apiKey) return fail("Analiz servisi yapılandırılmamış.", 500);
-    const image = (await request.formData()).get("image");
+    const formData = await request.formData();
+
+const image = formData.get("image");
+const rightImage = formData.get("rightImage");
+const leftImage = formData.get("leftImage");
+const backImage = formData.get("backImage");
+const topImage = formData.get("topImage");
     if (!(image instanceof File)) return fail("Fotoğraf gönderilmedi.", 400);
     if (!IMAGE_RULES.acceptedTypes.includes(image.type as never) || image.size > IMAGE_RULES.maxBytes) return fail("Fotoğraf JPG, PNG veya WEBP ve 10 MB'dan küçük olmalıdır.", 400);
 

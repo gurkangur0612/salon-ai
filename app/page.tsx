@@ -16,6 +16,9 @@ const MODES: { id: EditMode; label: string; detail: string }[] = [
 
 export default function Home() {
   const inputRef = useRef<HTMLInputElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+const streamRef = useRef<MediaStream | null>(null);
+const [cameraOpen, setCameraOpen] = useState(false);
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(null);
  const [rightFile, setRightFile] = useState<File | null>(null);
@@ -56,12 +59,54 @@ const [topPreview, setTopPreview] = useState<string | null>(null);
     setResult(null); setRawImage(null); setNormalizedOriginal(null); setMetrics(null); setDebugMasks(null); setMaskPreview(null); setError(""); setMode("hair");
   }
 
-  function onFileChange(event: ChangeEvent<HTMLInputElement>) {
-    const next = event.target.files?.[0]; if (next) selectFile(next);
-    event.target.value = "";
+  async function correctFrontPhoto(file: File): Promise<File> {
+  const imageUrl = URL.createObjectURL(file);
+
+  try {
+    const image = await new Promise<HTMLImageElement>((resolve, reject) => {
+      const img = new Image();
+      img.onload = () => resolve(img);
+      img.onerror = reject;
+      img.src = imageUrl;
+    });
+
+    const canvas = document.createElement("canvas");
+    canvas.width = image.naturalWidth;
+    canvas.height = image.naturalHeight;
+
+    const context = canvas.getContext("2d");
+    if (!context) return file;
+
+    context.translate(canvas.width, 0);
+    context.scale(-1, 1);
+    context.drawImage(image, 0, 0, canvas.width, canvas.height);
+
+    const blob = await new Promise<Blob | null>((resolve) => {
+      canvas.toBlob(resolve, "image/jpeg", 0.95);
+    });
+
+    if (!blob) return file;
+
+    return new File([blob], `corrected-${file.name}`, {
+      type: "image/jpeg",
+      lastModified: Date.now(),
+    });
+  } finally {
+    URL.revokeObjectURL(imageUrl);
+  }
+}
+
+async function onFileChange(event: ChangeEvent<HTMLInputElement>) {
+  const next = event.target.files?.[0];
+
+  if (next) {
+    const correctedPhoto = await correctFrontPhoto(next);
+    selectFile(correctedPhoto);
   }
 
-  async function analyze() {
+  event.target.value = "";
+}
+async function analyze() {
     if (!file || busy) return;
     setBusy("analyze"); setError(""); setAnalysis(null);
     try {

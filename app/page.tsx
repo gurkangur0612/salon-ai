@@ -182,6 +182,11 @@ setRightPreview(next ? URL.createObjectURL(next) : null);
     <span className="mt-1 block text-xs text-[#687873]">
       Kafanın yan derinliğini ve saç çizgisini değerlendirmek için isteğe bağlıdır.
     </span>
+    <ul className="mt-3 space-y-1 text-xs text-[#687873]">
+  <li>• Başını tam sola çevir.</li>
+  <li>• Kulak ve çene hattı tamamen görünsün.</li>
+  <li>• Telefon baş hizasında ve düz dursun.</li>
+</ul>
     <input
       className="mt-3 block w-full text-sm"
       type="file"

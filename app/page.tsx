@@ -212,6 +212,11 @@ setRightPreview(next ? URL.createObjectURL(next) : null);
   <span className="mt-1 block text-xs text-[#687873]">
     Ense çizgisi, başın arka eğimi ve saç yoğunluğunu değerlendirmek için kullanılır.
   </span>
+  <ul className="mt-3 space-y-1 text-xs text-[#687873]">
+  <li>• Baş ve omuzlar düz dursun.</li>
+  <li>• Ense çizgisi tamamen görünsün.</li>
+  <li>• Telefon baş hizasında ve tam arkada olsun.</li>
+</ul>
 
   <input
     className="mt-3 block w-full text-sm"

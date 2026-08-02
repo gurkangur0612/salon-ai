@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 /* eslint-disable @next/next/no-img-element */
 import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
@@ -142,7 +142,8 @@ if (topFile) body.append("topImage", topFile);
       <div className="rounded-[2rem] border border-black/10 bg-white p-5 shadow-[0_28px_80px_rgba(31,48,43,.14)] sm:p-7">
         <div onDragOver={(e) => e.preventDefault()} onDrop={(e) => { e.preventDefault(); const dropped = e.dataTransfer.files[0]; if (dropped) selectFile(dropped); }} className="rounded-3xl border-2 border-dashed border-[#2d6a5e]/25 bg-[#eef3f0] p-5 text-center">
           {preview ? <img src={preview} alt="YÃ¼klenen portre" className="mx-auto max-h-[520px] w-full rounded-2xl object-contain" /> : <div className="py-16"><div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-white text-2xl shadow-sm">â†¥</div><h2 className="mt-5 text-2xl font-black">Portre fotoÄŸrafÄ±nÄ± yÃ¼kle</h2><p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-[#687873]">Ã–nden Ã§ekilmiÅŸ, iyi aydÄ±nlatÄ±lmÄ±ÅŸ ve tek kiÅŸi iÃ§eren JPG, PNG veya WEBP.</p></div>}
-          <button onClick={() => inputRef.current?.click()} className="mt-4 rounded-full bg-[#173c35] px-6 py-3 font-bold text-white hover:bg-[#24584e]">{file ? "FotoÄŸrafÄ± deÄŸiÅŸtir" : "FotoÄŸraf seÃ§"}</button><input ref={inputRef} className="hidden" type="file" accept="image/jpeg,image/png,image/webp" onChange={onFileChange} />
+          <button onClick={() => inputRef.current?.click()} className="mt-4 rounded-full bg-[#173c35] px-6 py-3 font-bold text-white hover:bg-[#24584e]">{file ? "FotoÄŸrafÄ± deÄŸiÅŸtir" : "FotoÄŸraf seÃ§"}</button><input ref={inputRef} className="hidden" type="file" accept="image/jpeg,image/png,image/webp"
+      capture="user" onChange={onFileChange} />
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
   <label className="rounded-2xl border border-dashed border-[#2d6a5e]/30 bg-[#eef3f0] p-4 text-left">
     <span className="block text-sm font-bold text-[#173c35]">SaÄŸ profil fotoÄŸrafÄ±</span>
@@ -179,7 +180,7 @@ setRightPreview(next ? URL.createObjectURL(next) : null);
       className="mt-3 block w-full text-sm"
       type="file"
       accept="image/jpeg,image/png,image/webp"
-      capture="user"
+      capture="environment"
       onChange={(event) => {
         const next = event.target.files?.[0] ?? null;
         if (leftPreview) URL.revokeObjectURL(leftPreview);

@@ -187,6 +187,58 @@ setRightPreview(next ? URL.createObjectURL(next) : null);
       />
     )}
   </label>
+  <label className="rounded-2xl border border-dashed border-[#2d6a5e]/30 bg-[#eef3f0] p-4 text-left">
+  <span className="block text-sm font-bold text-[#173c35]">Arka fotoğraf</span>
+  <span className="mt-1 block text-xs text-[#687873]">
+    Ense çizgisi, başın arka eğimi ve saç yoğunluğunu değerlendirmek için kullanılır.
+  </span>
+
+  <input
+    className="mt-3 block w-full text-sm"
+    type="file"
+    accept="image/jpeg,image/png,image/webp"
+    onChange={(event) => {
+      const next = event.target.files?.[0] ?? null;
+      if (backPreview) URL.revokeObjectURL(backPreview);
+      setBackFile(next);
+      setBackPreview(next ? URL.createObjectURL(next) : null);
+    }}
+  />
+
+  {backPreview && (
+    <img
+      src={backPreview}
+      alt="Arka fotoğraf önizleme"
+      className="mt-3 h-40 w-full rounded-xl object-cover"
+    />
+  )}
+</label>
+<label className="rounded-2xl border border-dashed border-[#2d6a5e]/30 bg-[#eef3f0] p-4 text-left">
+  <span className="block text-sm font-bold text-[#173c35]">Üstten fotoğraf</span>
+  <span className="mt-1 block text-xs text-[#687873]">
+    Tepe bölgesi, saç ayrımı ve saç yoğunluğunu değerlendirmek için kullanılır.
+  </span>
+
+  <input
+    className="mt-3 block w-full text-sm"
+    type="file"
+    accept="image/jpeg,image/png,image/webp"
+    onChange={(event) => {
+      const next = event.target.files?.[0] ?? null;
+      if (topPreview) URL.revokeObjectURL(topPreview);
+      setTopFile(next);
+      setTopPreview(next ? URL.createObjectURL(next) : null);
+    }}
+  />
+
+  {topPreview && (
+    <img
+      src={topPreview}
+      alt="Üstten fotoğraf önizleme"
+      className="mt-3 h-40 w-full rounded-xl object-cover"
+    />
+  )}
+</label>
 </div>
         </div>
         <button onClick={analyze} disabled={!file || !!busy} className="mt-4 w-full rounded-2xl bg-[#d59b63] px-5 py-4 text-lg font-black text-[#2d2118] disabled:opacity-45">{busy === "analyze" ? "Danışman inceliyor…" : "Berber Danışmanına Sor"}</button>

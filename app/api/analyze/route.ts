@@ -35,6 +35,17 @@ const topImage = formData.get("topImage");
     if (!IMAGE_RULES.acceptedTypes.includes(image.type as never) || image.size > IMAGE_RULES.maxBytes) return fail("Fotoğraf JPG, PNG veya WEBP ve 10 MB'dan küçük olmalıdır.", 400);
 
     const dataUrl = `data:${image.type};base64,${Buffer.from(await image.arrayBuffer()).toString("base64")}`;
+    const rightDataUrl = await fileToDataUrl(rightImage);
+const leftDataUrl = await fileToDataUrl(leftImage);
+const backDataUrl = await fileToDataUrl(backImage);
+const topDataUrl = await fileToDataUrl(topImage);
+
+const angleImages = [
+  rightDataUrl && { type: "input_image" as const, image_url: rightDataUrl, detail: "low" as const },
+  leftDataUrl && { type: "input_image" as const, image_url: leftDataUrl, detail: "low" as const },
+  backDataUrl && { type: "input_image" as const, image_url: backDataUrl, detail: "low" as const },
+  topDataUrl && { type: "input_image" as const, image_url: topDataUrl, detail: "low" as const },
+].filter(Boolean);
     const names = BARBER_HAIRSTYLES.map((item) => item.name);
     const response = await fetch("https://api.openai.com/v1/responses", {
       method: "POST",

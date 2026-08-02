@@ -52,6 +52,19 @@ const cacheKey = [
       : "none"
   )
   .join("|");
+  const cached = analysisCache.get(cacheKey);
+
+if (cached && cached.expiresAt > Date.now()) {
+  return NextResponse.json({
+    success: true,
+    analysis: cached.analysis,
+    cached: true,
+  });
+}
+
+if (cached) {
+  analysisCache.delete(cacheKey);
+}
     if (!(image instanceof File)) return fail("Fotoğraf gönderilmedi.", 400);
     if (!IMAGE_RULES.acceptedTypes.includes(image.type as never) || image.size > IMAGE_RULES.maxBytes) return fail("Fotoğraf JPG, PNG veya WEBP ve 10 MB'dan küçük olmalıdır.", 400);
 

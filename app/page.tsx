@@ -143,7 +143,7 @@ if (topFile) body.append("topImage", topFile);
         <div onDragOver={(e) => e.preventDefault()} onDrop={(e) => { e.preventDefault(); const dropped = e.dataTransfer.files[0]; if (dropped) selectFile(dropped); }} className="rounded-3xl border-2 border-dashed border-[#2d6a5e]/25 bg-[#eef3f0] p-5 text-center">
           {preview ? <img src={preview} alt="Yüklenen portre" className="mx-auto max-h-[520px] w-full rounded-2xl object-contain" /> : <div className="py-16"><div className="mx-auto grid h-16 w-16 place-items-center rounded-full bg-white text-2xl shadow-sm">↥</div><h2 className="mt-5 text-2xl font-black">Portre fotoğrafını yükle</h2><p className="mx-auto mt-2 max-w-sm text-sm leading-6 text-[#687873]">Önden çekilmiş, iyi aydınlatılmış ve tek kişi içeren JPG, PNG veya WEBP.</p></div>}
           <button onClick={() => inputRef.current?.click()} className="mt-4 rounded-full bg-[#173c35] px-6 py-3 font-bold text-white hover:bg-[#24584e]">{file ? "Fotoğrafı değiştir" : "Fotoğraf seç"}</button><input ref={inputRef} className="hidden" type="file" accept="image/jpeg,image/png,image/webp"
-      capture="user" onChange={onFileChange} />
+      capture="user" onChange={onFileChange} /><ul className="mt-3 space-y-1 text-left text-xs text-[#687873]"><li>• Telefon göz hizasında olsun.</li><li>• Yüz ve saç çizgisi tamamen görünsün.</li><li>• Işık önden gelsin, filtre kullanılmasın.</li></ul>
           <div className="mt-6 grid gap-4 sm:grid-cols-2">
   <label className="rounded-2xl border border-dashed border-[#2d6a5e]/30 bg-[#eef3f0] p-4 text-left">
     <span className="block text-sm font-bold text-[#173c35]">Sağ profil fotoğrafı</span>

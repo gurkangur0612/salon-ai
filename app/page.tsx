@@ -1,4 +1,4 @@
-"use client";
+﻿"use client";
 
 /* eslint-disable @next/next/no-img-element */
 import { ChangeEvent, useEffect, useMemo, useRef, useState } from "react";
@@ -150,7 +150,13 @@ if (topFile) body.append("topImage", topFile);
     <span className="mt-1 block text-xs text-[#687873]">
       Kafa yapısını ve şakak geçişlerini daha iyi anlamamız için isteğe bağlıdır.
     </span>
+    <ul className="mt-3 space-y-1 text-xs text-[#687873]">
+  <li>• Başını tam sağa çevir.</li>
+  <li>• Kulak ve çene hattı tamamen görünsün.</li>
+  <li>• Telefon baş hizasında ve düz dursun.</li>
+</ul>
     <input
+    
       className="mt-3 block w-full text-sm"
       type="file"
       accept="image/jpeg,image/png,image/webp"

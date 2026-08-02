@@ -2,6 +2,13 @@ import { NextResponse } from "next/server";
 import { BARBER_HAIRSTYLES } from "@/app/lib/hairstyles";
 import { IMAGE_RULES, OPENAI_MODELS } from "@/app/lib/config";
 
+type CachedAnalysis = {
+  analysis: unknown;
+  expiresAt: number;
+};
+
+const analysisCache = new Map<string, CachedAnalysis>();
+const CACHE_DURATION_MS = 1000 * 60 * 60;
 export const runtime = "nodejs";
 export const maxDuration = 60;
 
